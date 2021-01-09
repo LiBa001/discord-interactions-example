@@ -22,5 +22,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: my-org/my-repo/my-image
+          repository: liba001/discord-interactions-example/discord-interactions-example
           tag_with_ref: true
