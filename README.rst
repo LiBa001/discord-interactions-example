@@ -54,6 +54,19 @@ you only want them to be available on one Discord Server, you can use guild comm
 __ https://discord.com/developers/docs/interactions/slash-commands#registering-a-command
 
 
+Invite the demo bot!
+--------------------
+
+I have created a demo bot that you can `invite to your Discord server`__ to test
+Discord Interactions. It is automatically updated to run the latest version of
+the code in this repository.
+
+Note: As you can see, the bot only requires the ``applications.commands`` scope for
+Slash Commands to be available. No actual bot user gets added to your Discord server.
+
+__ https://discord.com/api/oauth2/authorize?client_id=797322480477143080&scope=applications.commands
+
+
 .. _Discord Interactions: https://discord.com/developers/docs/interactions/slash-commands
 .. _discord-interactions.py: https://github.com/LiBa001/discord-interactions.py
 .. _Flask: https://flask.palletsprojects.com/
