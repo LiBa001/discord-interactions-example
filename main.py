@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from discord_interactions.flask_ext import Interactions, CommandContext
+from discord_interactions.flask_ext import Interactions, CommandContext, AfterCommandContext
 from flask import Flask
 import os
 import random
@@ -87,14 +87,16 @@ def guess(_: CommandContext, guessed_num, min_num=None, max_num=None):
 
 @interactions.command(Delay)
 def delay(_):
-    return None
+    return None, True  # delayed and ephemeral
 
 
 @delay.after_command
-def after_delay(ctx):
+def after_delay(ctx: AfterCommandContext):
     delay_time = ctx.interaction.data.options[0].value
+    ctx.edit_original("starting countdown")
     time.sleep(delay_time)
     ctx.send(f"{delay_time} seconds have passed")
+    ctx.client.delete_response()
 
 
 if __name__ == "__main__":
