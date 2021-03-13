@@ -87,14 +87,12 @@ def guess(_: CommandContext, guessed_num, min_num=None, max_num=None):
 
 @interactions.command(Delay)
 def delay(_):
-    return None, True  # delayed and ephemeral
+    return "starting countdown", True  # ephemeral
 
 
 @delay.after_command
 def after_delay(ctx: AfterCommandContext):
-    time.sleep(0.1)  # short delay to make sure the initial response has been sent
     delay_time = ctx.interaction.data.options[0].value
-    ctx.edit_original("starting countdown")
     time.sleep(delay_time)
     ctx.send(f"{delay_time} seconds have passed")
     ctx.client.delete_response()
