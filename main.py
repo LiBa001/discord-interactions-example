@@ -92,6 +92,7 @@ def delay(_):
 
 @delay.after_command
 def after_delay(ctx: AfterCommandContext):
+    time.sleep(0.1)  # short delay to make sure the initial response has been sent
     delay_time = ctx.interaction.data.options[0].value
     ctx.edit_original("starting countdown")
     time.sleep(delay_time)
