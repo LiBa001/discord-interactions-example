@@ -111,7 +111,7 @@ def user_info(cmd: UserInfo):
         user = cmd.author
 
     if cmd.raw:
-        return user, True  # ephemeral
+        return user.to_dict(), True  # ephemeral
 
     info = f"not yet implemented, please request raw data"
 
