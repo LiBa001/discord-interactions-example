@@ -98,17 +98,17 @@ def after_delay(ctx: AfterCommandContext):
     ctx.client.delete_response()
 
 
-@interactions.command(Hug)
-def hug(ctx: CommandContext, user_id):
-    return f"<@{ctx.interaction.user.id}> *hugs* <@{user_id}>"
+@interactions.command
+def hug(cmd: Hug):
+    return f"<@{cmd.interaction.author.id}> *hugs* <@{cmd.cutie}>"
 
 
 @interactions.command
 def user_info(cmd: UserInfo):
     if cmd.user:
-        user = cmd.interaction.data.resolved.users[cmd.user]
+        user = cmd.interaction.get_user(cmd.user)
     else:
-        user = cmd.interaction.user
+        user = cmd.author
 
     if cmd.raw:
         return user, True  # ephemeral
