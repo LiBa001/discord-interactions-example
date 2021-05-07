@@ -32,9 +32,6 @@ from main import interactions
 if __name__ == "__main__":
     client = ApplicationClient(os.getenv("BOT_TOKEN"))
 
-    for cmd in interactions.commands:
-        print("create", cmd.name)
-
-        # You might specify a guild here.
-        # Global commands can take up to one hour to be available after registration.
-        client.create_command(cmd)
+    # You might specify a guild here.
+    # Global commands can take up to one hour to be available after registration.
+    client.bulk_overwrite_commands(interactions.commands)

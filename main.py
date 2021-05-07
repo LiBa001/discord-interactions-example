@@ -28,7 +28,7 @@ from discord_interactions.flask_ext import Interactions, CommandContext, AfterCo
 from flask import Flask
 import os
 import random
-from commands import Ping, Echo, RPS, RPSSymbol, Guess, Delay
+from commands import Ping, Echo, RPS, RPSSymbol, Guess, Delay, Hug, UserInfo
 import time
 
 app = Flask(__name__)
@@ -96,6 +96,26 @@ def after_delay(ctx: AfterCommandContext):
     time.sleep(delay_time)
     ctx.send(f"{delay_time} seconds have passed")
     ctx.client.delete_response()
+
+
+@interactions.command(Hug)
+def hug(ctx: CommandContext, user_id):
+    return f"<@{ctx.interaction.user.id}> *hugs* <@{user_id}>"
+
+
+@interactions.command
+def user_info(cmd: UserInfo):
+    if cmd.user:
+        user = cmd.interaction.data.resolved[cmd.user]
+    else:
+        user = cmd.interaction.user
+
+    if cmd.raw:
+        return user, True  # ephemeral
+
+    info = f"not yet implemented, please request raw data"
+
+    return info, True  # ephemeral
 
 
 if __name__ == "__main__":
