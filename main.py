@@ -106,7 +106,7 @@ def hug(ctx: CommandContext, user_id):
 @interactions.command
 def user_info(cmd: UserInfo):
     if cmd.user:
-        user = cmd.interaction.data.resolved[cmd.user]
+        user = cmd.interaction.data.resolved.users[cmd.user]
     else:
         user = cmd.interaction.user
 
