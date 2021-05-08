@@ -25,6 +25,7 @@ SOFTWARE.
 """
 
 from discord_interactions.ocm import Command, Option, OptionChoices
+from discord_interactions import ApplicationCommandOptionType
 
 
 class Ping(Command):
@@ -61,3 +62,16 @@ class Delay(Command):
     """ Responds after a given time. """
 
     seconds: int = Option("The time to wait", required=True)
+
+
+class Hug(Command):
+    """ Hug someone nice. """
+
+    cutie: ApplicationCommandOptionType.USER = Option("hug this person", required=True)
+
+
+class UserInfo(Command):
+    """ Retrieve info about a specific user. """
+
+    user: ApplicationCommandOptionType.USER = Option("user to get info about")
+    raw: bool = Option("return the raw JSON data received from Discord")

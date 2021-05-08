@@ -24,11 +24,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from discord_interactions.flask_ext import Interactions, CommandContext
+from discord_interactions.flask_ext import Interactions, CommandContext, AfterCommandContext
+from discord_interactions import Member
 from flask import Flask
 import os
 import random
-from commands import Ping, Echo, RPS, RPSSymbol, Guess, Delay
+from commands import Ping, Echo, RPS, RPSSymbol, Guess, Delay, Hug, UserInfo
 import time
 
 app = Flask(__name__)
@@ -87,14 +88,46 @@ def guess(_: CommandContext, guessed_num, min_num=None, max_num=None):
 
 @interactions.command(Delay)
 def delay(_):
-    return None
+    return None  # deferred response
 
 
 @delay.after_command
-def after_delay(ctx):
+def after_delay(ctx: AfterCommandContext):
     delay_time = ctx.interaction.data.options[0].value
     time.sleep(delay_time)
-    ctx.send(f"{delay_time} seconds have passed")
+    ctx.edit_original(f"{delay_time} seconds have passed")
+
+
+@interactions.command
+def hug(cmd: Hug):
+    return f"<@{cmd.interaction.author.id}> *hugs* <@{cmd.cutie}>"
+
+
+@interactions.command
+def user_info(cmd: UserInfo):
+    if cmd.user:
+        user = cmd.interaction.get_user(cmd.user)
+    else:
+        user = cmd.author
+
+    if cmd.raw:
+        return f"```json\n{user.to_dict()}\n```", True  # ephemeral
+
+    info = ""
+
+    if isinstance(user, Member):
+        role_info = " ".join(f"<@&{r}>" for r in user.roles)
+        info += f"**Member**\nnick: {user.nick}\nroles: {role_info}\n" \
+                f"joined at: {user.joined_at.isoformat()}\n" \
+                f"premium since: {user.premium_since.isoformat()}\n" \
+                f"deaf: {user.deaf}\nmute: {user.mute}\n\n"
+        user = user.user
+
+    info += f"**User**\nid: {user.id}\nusername: {user.username}\n" \
+            f"discriminator: {user.discriminator}\navatar: {user.avatar}\n" \
+            f"public flags: {', '.join(f.name for f in user.public_flags)}"
+
+    return info, True  # ephemeral
 
 
 if __name__ == "__main__":
