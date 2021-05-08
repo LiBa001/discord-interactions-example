@@ -119,13 +119,13 @@ def user_info(cmd: UserInfo):
         role_info = " ".join(f"<@&{r}>" for r in user.roles)
         info += f"**Member**\nnick: {user.nick}\nroles: {role_info}\n" \
                 f"joined at: {user.joined_at.isoformat()}\n" \
-                f"premium since: {user.premium_since.isoformat()}" \
+                f"premium since: {user.premium_since.isoformat()}\n" \
                 f"deaf: {user.deaf}\nmute: {user.mute}\n\n"
         user = user.user
 
     info += f"**User**\nid: {user.id}\nusername: {user.username}\n" \
             f"discriminator: {user.discriminator}\navatar: {user.avatar}\n" \
-            f"public flags: {user.public_flags}"
+            f"public flags: {', '.join(f.name for f in user.public_flags)}"
 
     return info, True  # ephemeral
 
