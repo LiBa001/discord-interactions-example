@@ -108,7 +108,11 @@ def user_info(cmd: UserInfo):
     u_id = cmd.user
     if u_id:
         # get resolved member/user data by id
-        user = cmd.interaction.get_member(u_id) or cmd.interaction.get_user(u_id)
+        member = cmd.interaction.get_member(u_id)
+        user = cmd.interaction.get_user(u_id)
+        if member:
+            member.user = user
+            user = member
     else:
         user = cmd.author
 
