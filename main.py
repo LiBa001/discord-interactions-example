@@ -31,6 +31,7 @@ import os
 import random
 from commands import Ping, Echo, RPS, RPSSymbol, Guess, Delay, Hug, UserInfo
 import time
+import json
 
 app = Flask(__name__)
 interactions = Interactions(app, os.getenv("CLIENT_PUBLIC_KEY"), os.getenv("CLIENT_ID"))
@@ -117,24 +118,26 @@ def user_info(cmd: UserInfo):
         user = cmd.author
 
     if cmd.raw:
-        return f"```json\n{user.to_dict()}\n```", True  # ephemeral
+        return f"```json\n{json.dumps(user.to_dict(), indent=2)}\n```", True  # ephemeral
 
     info = ""
 
     if isinstance(user, Member):
         role_info = " ".join(f"<@&{r}>" for r in user.roles)
-        info += f"**Member**\nnick: {user.nick}\nroles: {role_info}\n" \
-                f"joined at: {user.joined_at.isoformat()}\n" \
-                f"deaf: {user.deaf}\nmute: {user.mute}\npending: {user.pending}\n\n"
+        info += f"**Member**\nnick: `{user.nick}`\nroles: {role_info}\n" \
+                f"joined at: `{user.joined_at.isoformat()}`\n"
 
         if user.premium_since:
-            info += f"premium since: {user.premium_since.isoformat()}\n"
+            info += f"premium since: `{user.premium_since.isoformat()}`\n"
+
+        info += f"deaf: `{user.deaf}`\nmute: `{user.mute}`\npending: `{user.pending}`" \
+                f"\n\n"
 
         user = user.user
 
-    info += f"**User**\nid: {user.id}\nusername: {user.username}\n" \
-            f"discriminator: {user.discriminator}\navatar: {user.avatar}\n" \
-            f"public flags: {', '.join(f.name for f in user.public_flags)}"
+    info += f"**User**\nid: `{user.id}`\nusername: `{user.username}`\n" \
+            f"discriminator: `{user.discriminator}`\navatar: `{user.avatar}`\n" \
+            f"public flags: {', '.join(f'`{f.name}`' for f in user.public_flags)}"
 
     return info, True  # ephemeral
 
