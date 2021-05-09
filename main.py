@@ -105,8 +105,10 @@ def hug(cmd: Hug):
 
 @interactions.command
 def user_info(cmd: UserInfo):
-    if cmd.user:
-        user = cmd.interaction.get_user(cmd.user)
+    u_id = cmd.user
+    if u_id:
+        # get resolved member/user data by id
+        user = cmd.interaction.get_member(u_id) or cmd.interaction.get_user(u_id)
     else:
         user = cmd.author
 
@@ -119,8 +121,11 @@ def user_info(cmd: UserInfo):
         role_info = " ".join(f"<@&{r}>" for r in user.roles)
         info += f"**Member**\nnick: {user.nick}\nroles: {role_info}\n" \
                 f"joined at: {user.joined_at.isoformat()}\n" \
-                f"premium since: {user.premium_since.isoformat()}\n" \
-                f"deaf: {user.deaf}\nmute: {user.mute}\n\n"
+                f"deaf: {user.deaf}\nmute: {user.mute}\npending: {user.pending}\n\n"
+
+        if user.premium_since:
+            info += f"premium since: {user.premium_since.isoformat()}\n"
+
         user = user.user
 
     info += f"**User**\nid: {user.id}\nusername: {user.username}\n" \
