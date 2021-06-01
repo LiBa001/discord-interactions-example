@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from discord_interactions.ocm import Command, Option, OptionChoices
+from discord_interactions.ocm import Command, Option, OptionChoices, SubCommand
 from discord_interactions import ApplicationCommandOptionType
 
 
@@ -75,3 +75,15 @@ class UserInfo(Command):
 
     user: ApplicationCommandOptionType.USER = Option("user to get info about")
     raw: bool = Option("return the raw JSON data received from Discord")
+
+
+class Sha1(SubCommand):
+    """ Generate a SHA1 hash """
+
+    text: str = Option("the text to be hashed", required=True)
+
+
+class Generate(Command):
+    """ Generate different things """
+
+    sha1 = Sha1()

@@ -24,13 +24,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from discord_interactions.flask_ext import Interactions, CommandContext, AfterCommandContext
+from discord_interactions.flask_ext import (
+    Interactions, CommandContext, AfterCommandContext
+)
 from discord_interactions import Member
 from flask import Flask
 import os
 import random
-from commands import Ping, Echo, RPS, RPSSymbol, Guess, Delay, Hug, UserInfo
+from commands import (
+    Ping, Echo, RPS, RPSSymbol, Guess, Delay, Hug, UserInfo, Generate, Sha1
+)
 import time
+import hashlib
 
 app = Flask(__name__)
 interactions = Interactions(app, os.getenv("CLIENT_PUBLIC_KEY"), os.getenv("CLIENT_ID"))
@@ -128,6 +133,22 @@ def user_info(cmd: UserInfo):
             f"public flags: {', '.join(f.name for f in user.public_flags)}"
 
     return info, True  # ephemeral
+
+
+@interactions.command
+def generate(_: Generate):
+    pass  # this function gets called before any subcommands
+
+
+@generate.subcommand()
+def sha1(_: CommandContext, cmd: Sha1):
+    txt = cmd.text
+    return f'"{txt}"\n=> `{hashlib.sha1(txt.encode()).hexdigest()}`', True
+
+
+@generate.fallback
+def generate_fallback(_: CommandContext):
+    return "error: no subcommand provided", True
 
 
 if __name__ == "__main__":
