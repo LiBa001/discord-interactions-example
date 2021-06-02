@@ -135,9 +135,14 @@ def user_info(cmd: UserInfo):
     return info, True  # ephemeral
 
 
-@interactions.command
-def generate(_: Generate):
-    pass  # this function gets called before any subcommands
+@interactions.command(Generate)
+def generate():
+    pass  # this function gets called before any subcommands or subcommand groups
+
+
+@generate.subcommand()
+def _hash():
+    pass  # this function gets called before any subcommands in this group
 
 
 @generate.subcommand()
@@ -148,6 +153,7 @@ def sha1(_: CommandContext, cmd: Sha1):
 
 @generate.fallback
 def generate_fallback(_: CommandContext):
+    # called when no callback was registered for incoming subcommand name
     return "error: no subcommand provided", True
 
 

@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from discord_interactions.ocm import Command, Option, OptionChoices, SubCommand
+from discord_interactions.ocm import Command, Option, OptionChoices, SubCommand, SubCommandGroup
 from discord_interactions import ApplicationCommandOptionType
 
 
@@ -83,7 +83,13 @@ class Sha1(SubCommand):
     text: str = Option("the text to be hashed", required=True)
 
 
+class Hash(SubCommandGroup):
+    """ Generate hashes using different hash functions """
+
+    sha1 = Sha1()
+
+
 class Generate(Command):
     """ Generate different things """
 
-    sha1 = Sha1()
+    hash = Hash()
