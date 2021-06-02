@@ -1,2 +1,2 @@
-git+https://github.com/LiBa001/discord-interactions.py@dev
+git+https://github.com/LiBa001/discord-interactions.py@testing
 flask

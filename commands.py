@@ -93,3 +93,9 @@ class Generate(Command):
     """ Generate different things """
 
     hash = Hash()
+
+
+class HelloComponents(Command):
+    """ Testing message components (Buttons) """
+
+    pass

@@ -25,14 +25,23 @@ SOFTWARE.
 """
 
 from discord_interactions.flask_ext import (
-    Interactions, CommandContext, AfterCommandContext
+    Interactions, CommandContext, AfterCommandContext, ComponentContext
 )
-from discord_interactions import Member
+from discord_interactions import (
+    Member,
+    Button,
+    ButtonStyle,
+    ActionRow,
+    InteractionResponse,
+    InteractionCallbackType,
+    InteractionApplicationCommandCallbackData
+)
 from flask import Flask
 import os
 import random
 from commands import (
-    Ping, Echo, RPS, RPSSymbol, Guess, Delay, Hug, UserInfo, Generate, Sha1
+    Ping, Echo, RPS, RPSSymbol, Guess,
+    Delay, Hug, UserInfo, Generate, Sha1, HelloComponents
 )
 import time
 import hashlib
@@ -156,6 +165,23 @@ def sha1(_: CommandContext, cmd: Sha1):
 def generate_fallback(_: CommandContext):
     # called when no callback was registered for incoming subcommand name
     return "error: no subcommand provided", True
+
+
+@interactions.command(HelloComponents)
+def hello_components():
+    btn = Button("my_button", style=ButtonStyle.PRIMARY, label="Click me!")
+
+    return InteractionResponse(
+        InteractionCallbackType.CHANNEL_MESSAGE,
+        data=InteractionApplicationCommandCallbackData(
+            content="This is a button.", components=[ActionRow(components=[btn])]
+        ),
+    )
+
+
+@interactions.component("my_button")
+def button_handler(_: ComponentContext):
+    return "you clicked the button"
 
 
 if __name__ == "__main__":
