@@ -180,8 +180,9 @@ def hello_components():
 
 
 @interactions.component("my_button")
-def button_handler(_: ComponentContext):
-    return "you clicked the button"
+def button_handler(ctx: ComponentContext):
+    user = a.user if isinstance(a := ctx.interaction.author, Member) else a
+    return f"{user.username} clicked the button"
 
 
 if __name__ == "__main__":
