@@ -145,13 +145,14 @@ def _hash():
     pass  # this function gets called before any subcommands in this group
 
 
-@generate.subcommand()
+@_hash.subcommand()
 def sha1(_: CommandContext, cmd: Sha1):
     txt = cmd.text
     return f'"{txt}"\n=> `{hashlib.sha1(txt.encode()).hexdigest()}`', True
 
 
 @generate.fallback
+@_hash.fallback
 def generate_fallback(_: CommandContext):
     # called when no callback was registered for incoming subcommand name
     return "error: no subcommand provided", True
