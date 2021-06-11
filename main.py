@@ -25,16 +25,15 @@ SOFTWARE.
 """
 
 from discord_interactions.flask_ext import (
-    Interactions, CommandContext, AfterCommandContext, ComponentContext
+    Interactions, CommandContext, AfterCommandContext,
+    ComponentContext, AfterComponentContext
 )
 from discord_interactions import (
     Member,
     Button,
     ButtonStyle,
     ActionRow,
-    InteractionResponse,
-    InteractionCallbackType,
-    InteractionApplicationCommandCallbackData
+    Response
 )
 from flask import Flask
 import os
@@ -171,18 +170,20 @@ def generate_fallback(_: CommandContext):
 def hello_components():
     btn = Button("my_button", style=ButtonStyle.PRIMARY, label="Click me!")
 
-    return InteractionResponse(
-        InteractionCallbackType.CHANNEL_MESSAGE,
-        data=InteractionApplicationCommandCallbackData(
-            content="This is a button.", components=[ActionRow(components=[btn])]
-        ),
-    )
+    return Response("This is a button.", components=[ActionRow(components=[btn])])
 
 
 @interactions.component("my_button")
 def button_handler(ctx: ComponentContext):
-    user = a.user if isinstance(a := ctx.interaction.author, Member) else a
+    user = ctx.interaction.user
     return f"{user.username} clicked the button"
+
+
+@button_handler.after_component
+def _after_button_handler(ctx: AfterComponentContext):
+    ctx.send(
+        f"this is a followup message to {ctx.interaction.user.username}'s button click"
+    )
 
 
 if __name__ == "__main__":
