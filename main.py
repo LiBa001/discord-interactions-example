@@ -181,6 +181,7 @@ def button_handler(ctx: ComponentContext):
 
 @button_handler.after_component
 def _after_button_handler(ctx: AfterComponentContext):
+    print("after button handler called", flush=True)
     ctx.send(
         f"this is a followup message to {ctx.interaction.user.username}'s button click"
     )
