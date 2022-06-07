@@ -39,10 +39,6 @@ from discord_interactions import (
 from flask import Flask
 import os
 import random
-from commands import (
-    Ping, Echo, RPS, RPSSymbol, Guess,
-    Delay, Hug, UserInfo, Generate, Sha1, HelloComponents
-)
 import time
 import hashlib
 
@@ -50,17 +46,17 @@ app = Flask(__name__)
 interactions = Interactions(app, os.getenv("CLIENT_PUBLIC_KEY"), os.getenv("CLIENT_ID"))
 
 
-@interactions.command(Ping.to_application_command())
+@interactions.command
 def ping():
     return "pong"
 
 
-@interactions.command(Echo.to_application_command())
+@interactions.command
 def echo(_, message: str):
     return message, False
 
 
-@interactions.command(RPS.to_application_command())
+@interactions.command
 def rps(_, symbol: RPSSymbol):
     choice = random.choice(list(RPSSymbol))
 
@@ -85,7 +81,7 @@ def rps(_, symbol: RPSSymbol):
     return f"I took {choice.value}. {msg}"
 
 
-@interactions.command(Guess.to_application_command())
+@interactions.command
 def guess(_: CommandContext, guessed_num, min_num=None, max_num=None):
     min_val = min_num or 0  # defaults to 0
     max_val = max_num or 10  # defaults to 10
@@ -100,7 +96,7 @@ def guess(_: CommandContext, guessed_num, min_num=None, max_num=None):
     return f"My number was {my_number}. {msg}"
 
 
-@interactions.command(Delay.to_application_command())
+@interactions.command
 def delay():
     return None  # deferred response
 
@@ -112,12 +108,12 @@ def after_delay(ctx: AfterCommandContext):
     ctx.edit_original(f"{delay_time} seconds have passed")
 
 
-@interactions.command(Hug.to_application_command())
+@interactions.command
 def hug(ctx: CommandContext, cutie: int):
     return f"<@{ctx.interaction.author.id}> *hugs* <@{cutie}>"
 
 
-@interactions.command(UserInfo.to_application_command())
+@interactions.command("userinfo")
 def user_info(ctx: CommandContext, user_id: int, raw: bool):
     if user_id:
         user = ctx.interaction.get_user(user_id)
@@ -144,7 +140,7 @@ def user_info(ctx: CommandContext, user_id: int, raw: bool):
     return info, True  # ephemeral
 
 
-@interactions.command(Generate.to_application_command())
+@interactions.command
 def generate():
     pass  # this function gets called before any subcommands or subcommand groups
 
@@ -166,7 +162,7 @@ def generate_fallback(_: CommandContext):
     return "error: no subcommand provided", True
 
 
-@interactions.command(HelloComponents.to_application_command())
+@interactions.command("hellocomponents")
 def hello_components():
     btn = Button("my_button", style=ButtonStyle.PRIMARY, label="Click me!")
 
