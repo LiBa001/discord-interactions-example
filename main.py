@@ -50,28 +50,28 @@ app = Flask(__name__)
 interactions = Interactions(app, os.getenv("CLIENT_PUBLIC_KEY"), os.getenv("CLIENT_ID"))
 
 
-@interactions.command
-def ping(_: Ping):
+@interactions.command(Ping.to_application_command())
+def ping():
     return "pong"
 
 
-@interactions.command
-def echo(cmd: Echo):
-    return cmd.message, False
+@interactions.command(Echo.to_application_command())
+def echo(_, message: str):
+    return message, False
 
 
-@interactions.command
-def rps(cmd: RPS):
+@interactions.command(RPS.to_application_command())
+def rps(_, symbol: RPSSymbol):
     choice = random.choice(list(RPSSymbol))
 
-    if cmd.symbol == choice:
+    if symbol == choice:
         msg = "It's a draw!"
-    elif cmd.symbol == RPSSymbol.ROCK:
+    elif symbol == RPSSymbol.ROCK:
         if choice == RPSSymbol.SCISSORS:
             msg = "You crush me and win!"
         else:
             msg = "You get covered and lose!"
-    elif cmd.symbol == RPSSymbol.PAPER:
+    elif symbol == RPSSymbol.PAPER:
         if choice == RPSSymbol.ROCK:
             msg = "You cover me and win!"
         else:
@@ -85,7 +85,7 @@ def rps(cmd: RPS):
     return f"I took {choice.value}. {msg}"
 
 
-@interactions.command(Guess)
+@interactions.command(Guess.to_application_command())
 def guess(_: CommandContext, guessed_num, min_num=None, max_num=None):
     min_val = min_num or 0  # defaults to 0
     max_val = max_num or 10  # defaults to 10
@@ -100,8 +100,8 @@ def guess(_: CommandContext, guessed_num, min_num=None, max_num=None):
     return f"My number was {my_number}. {msg}"
 
 
-@interactions.command(Delay)
-def delay(_):
+@interactions.command(Delay.to_application_command())
+def delay():
     return None  # deferred response
 
 
@@ -112,19 +112,19 @@ def after_delay(ctx: AfterCommandContext):
     ctx.edit_original(f"{delay_time} seconds have passed")
 
 
-@interactions.command
-def hug(cmd: Hug):
-    return f"<@{cmd.interaction.author.id}> *hugs* <@{cmd.cutie}>"
+@interactions.command(Hug.to_application_command())
+def hug(ctx: CommandContext, cutie: int):
+    return f"<@{ctx.interaction.author.id}> *hugs* <@{cutie}>"
 
 
-@interactions.command
-def user_info(cmd: UserInfo):
-    if cmd.user:
-        user = cmd.interaction.get_user(cmd.user)
+@interactions.command(UserInfo.to_application_command())
+def user_info(ctx: CommandContext, user_id: int, raw: bool):
+    if user_id:
+        user = ctx.interaction.get_user(user_id)
     else:
-        user = cmd.author
+        user = ctx.interaction.author
 
-    if cmd.raw:
+    if raw:
         return f"```json\n{user.to_dict()}\n```", True  # ephemeral
 
     info = ""
@@ -144,7 +144,7 @@ def user_info(cmd: UserInfo):
     return info, True  # ephemeral
 
 
-@interactions.command(Generate)
+@interactions.command(Generate.to_application_command())
 def generate():
     pass  # this function gets called before any subcommands or subcommand groups
 
@@ -155,9 +155,8 @@ def _hash():
 
 
 @_hash.subcommand()
-def sha1(_: CommandContext, cmd: Sha1):
-    txt = cmd.text
-    return f'"{txt}"\n=> `{hashlib.sha1(txt.encode()).hexdigest()}`', True
+def sha1(_: CommandContext, text: str):
+    return f'"{text}"\n=> `{hashlib.sha1(text.encode()).hexdigest()}`', True
 
 
 @generate.fallback
@@ -167,7 +166,7 @@ def generate_fallback(_: CommandContext):
     return "error: no subcommand provided", True
 
 
-@interactions.command(HelloComponents)
+@interactions.command(HelloComponents.to_application_command())
 def hello_components():
     btn = Button("my_button", style=ButtonStyle.PRIMARY, label="Click me!")
 
