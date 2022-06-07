@@ -24,16 +24,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from discord_interactions.flask_ext import (
-    Interactions, CommandContext, AfterCommandContext,
+from discord_interactions.ext import (
+    CommandContext, AfterCommandContext,
     ComponentContext, AfterComponentContext
 )
+from discord_interactions.ext.flask import Interactions
 from discord_interactions import (
     Member,
     Button,
     ButtonStyle,
     ActionRow,
-    Response
+    MessageResponse
 )
 from flask import Flask
 import os
@@ -170,7 +171,7 @@ def generate_fallback(_: CommandContext):
 def hello_components():
     btn = Button("my_button", style=ButtonStyle.PRIMARY, label="Click me!")
 
-    return Response("This is a button.", components=[ActionRow(components=[btn])])
+    return MessageResponse("This is a button.", components=[ActionRow(btn)])
 
 
 @interactions.component("my_button")
@@ -179,7 +180,7 @@ def button_handler(ctx: ComponentContext):
     return f"{user.username} clicked the button"
 
 
-@button_handler.after_component
+@button_handler.after_element
 def _after_button_handler(ctx: AfterComponentContext):
     print("after button handler called", flush=True)
     ctx.send(

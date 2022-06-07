@@ -34,4 +34,5 @@ if __name__ == "__main__":
 
     # You might specify a guild here.
     # Global commands can take up to one hour to be available after registration.
-    client.bulk_overwrite_commands(interactions.commands)
+    #client.bulk_overwrite_commands(interactions.commands)
+    client.create_command(interactions.commands[-1], guild=270568062149853184)
