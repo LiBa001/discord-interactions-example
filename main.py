@@ -42,6 +42,8 @@ import random
 import time
 import hashlib
 
+from commands import RPSSymbol
+
 app = Flask(__name__)
 interactions = Interactions(app, os.getenv("CLIENT_PUBLIC_KEY"), os.getenv("CLIENT_ID"))
 
