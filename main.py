@@ -39,8 +39,8 @@ from discord_interactions import (
 from flask import Flask
 import os
 import random
-import time
 import hashlib
+import asyncio
 
 from commands import RPSSymbol
 
@@ -104,10 +104,10 @@ def delay():
 
 
 @delay.after_command
-def after_delay(ctx: AfterCommandContext):
+async def after_delay(ctx: AfterCommandContext):
     delay_time = ctx.interaction.data.options[0].value
-    time.sleep(delay_time)
-    ctx.edit_original(f"{delay_time} seconds have passed")
+    await asyncio.sleep(delay_time)
+    await ctx.edit_original(f"{delay_time} seconds have passed")
 
 
 @interactions.command
